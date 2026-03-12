@@ -1,54 +1,69 @@
 <!DOCTYPE html>
-<html lang="ky">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jeke Kitep | Premium Edition</title>
+    <title>Моя Книга Жизни | Premium Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root { --main: #800000; --gold: #d4af37; }
         body { font-family: 'Lora', serif; background: #4a0000; color: white; margin: 0; padding: 20px; display: flex; justify-content: center; min-height: 100vh; }
-        .container { background: white; color: #333; padding: 30px; border-radius: 20px; width: 100%; max-width: 450px; border: 2px solid var(--gold); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); height: fit-content; }
-        h2 { font-family: 'Playfair Display', serif; color: var(--main); }
-        input, textarea, select { width: 100%; padding: 12px; margin-top: 10px; border: 1px solid #ccc; border-radius: 10px; font-family: inherit; font-size: 16px; box-sizing: border-box; }
+        .container { background: white; color: #333; padding: 30px; border-radius: 20px; width: 100%; max-width: 450px; border: 2px solid var(--gold); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h2 { font-family: 'Playfair Display', serif; color: var(--main); margin-bottom: 20px; }
+        input, textarea { width: 100%; padding: 12px; margin-top: 10px; border: 1px solid #ccc; border-radius: 10px; font-family: inherit; font-size: 16px; box-sizing: border-box; }
         .btn { background: linear-gradient(45deg, var(--main), #b30000); color: white; padding: 15px; border: none; width: 100%; border-radius: 50px; margin-top: 20px; cursor: pointer; font-size: 18px; font-weight: bold; }
         .hidden { display: none; }
-        .progress { color: var(--gold); font-weight: bold; margin-bottom: 10px; }
         .theme-btn { background: #fdf2f2; border: 1px solid var(--main); padding: 15px; border-radius: 10px; cursor: pointer; color: var(--main); font-weight: bold; margin-top: 10px; display: block; width: 100%; text-align: center; }
+        .info-text { font-size: 14px; color: #666; margin-top: 5px; }
+        #image-previews { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-top: 10px; }
+        .preview-img { width: 100%; height: 50px; object-fit: cover; border-radius: 5px; border: 1px solid var(--gold); }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div id="password-section">
-        <h2>Кирүү</h2>
-        <input type="password" id="passInput" placeholder="Паролду жазыңыз">
-        <button class="btn" onclick="checkPassword()">Кирүү</button>
+        <h2>Вход</h2>
+        <input type="password" id="passInput" placeholder="Введите пароль">
+        <button class="btn" onclick="checkPassword()">Войти</button>
     </div>
 
     <div id="theme-section" class="hidden">
-        <h2>Ким жөнүндө китеп жазабыз?</h2>
-        <div class="theme-btn" onclick="startQuiz('апа')">Апам жөнүндө ❤️</div>
-        <div class="theme-btn" onclick="startQuiz('ата')">Атам жөнүндө 👔</div>
-        <div class="theme-btn" onclick="startQuiz('суйуу')">Сүйүү / Түгөйүм 💍</div>
-        <div class="theme-btn" onclick="startQuiz('дос')">Досум / Курбум 🤝</div>
+        <h2>О ком будет книга?</h2>
+        <div class="theme-btn" onclick="selectTheme('мама')">О маме ❤️</div>
+        <div class="theme-btn" onclick="selectTheme('любовь')">О любимом человеке 💍</div>
+        <div class="theme-btn" onclick="selectTheme('папа')">О папе 👔</div>
+        <div class="theme-btn" onclick="selectTheme('друг')">О друге / подруге 🤝</div>
+    </div>
+
+    <div id="cover-section" class="hidden">
+        <h2>Обложка книги</h2>
+        <p class="info-text">Выберите фото для обложки (макс. 10)</p>
+        <input type="file" id="coverImages" accept="image/*" multiple onchange="previewImages()">
+        <div id="image-previews"></div>
+        
+        <h2 style="margin-top:30px;">Авторы</h2>
+        <p class="info-text">Кто пишет эту книгу? (напр: Куаныш, Фатима)</p>
+        <textarea id="authorsInput" placeholder="Введите имена авторов..."></textarea>
+        
+        <button class="btn" onclick="startQuestions()">К вопросам ➡️</button>
     </div>
 
     <div id="quiz-section" class="hidden">
-        <div class="progress" id="progressText">Суроо: 1</div>
+        <div style="color:var(--gold); font-weight:bold;" id="progressText">Вопрос: 1</div>
         <h2 id="questionText">...</h2>
-        <textarea id="answerInput" placeholder="Жообуңузду жазыңыз..."></textarea>
-        <div id="imageArea" class="hidden" style="margin-top:10px;">
-            <p style="font-size:12px; color:var(--main);">📸 Сүрөт тиркеңиз (милдеттүү эмес):</p>
-            <input type="file" id="stepImage" accept="image/*">
+        <textarea id="answerInput" placeholder="Ваш ответ..."></textarea>
+        <div id="questionImageArea" class="hidden">
+            <p class="info-text">📸 Прикрепите фото к ответу:</p>
+            <input type="file" id="qImage" accept="image/*">
         </div>
-        <button class="btn" id="nextBtn" onclick="nextQuestion()">Кийинки ➡️</button>
+        <button class="btn" onclick="nextQuestion()">Далее ➡️</button>
     </div>
 
     <div id="final-section" class="hidden">
-        <h2>Баары даяр! 🎉</h2>
-        <p>Бардык жооптор чогултулду. Төмөнкү баскычты басып жөнөтүңүз.</p>
-        <button class="btn" id="sendBtn" onclick="sendAllToTelegram()">Телеграмга Жөнөтүү 🚀</button>
+        <h2>Почти готово! 🎉</h2>
+        <p>Нажмите кнопку ниже, чтобы отправить все данные для создания книги.</p>
+        <button class="btn" id="sendBtn" onclick="sendToTelegram()">Отправить в Telegram 🚀</button>
     </div>
 </div>
 
@@ -56,101 +71,15 @@
     const BOT_TOKEN = "8604545122:AAEx9ZLtB8Cwl1Juj7ue15ktZoB1UtrpBDQ";
     const CHAT_ID = "5420064941";
 
-    function checkPassword() {
-        if (document.getElementById('passInput').value === "1234") {
-            document.getElementById('password-section').classList.add('hidden');
-            document.getElementById('theme-section').classList.remove('hidden');
-        } else { alert("Ката пароль!"); }
-    }
-
-    const allQuestions = {
-        "апа": [
-            { q: "Апаңыздын аты-жөнү?", img: false },
-            { q: "Апаңыздын эң жакшы көргөн сүрөтүн тиркеңиз", img: true },
-            { q: "Апаңыздын эң сонун сапаты кайсы?", img: false },
-            { q: "Апаңыздын сүйүктүү гүлүнүн сүрөтү", img: true },
-            { q: "Ага айткыңыз келген эң башкы сөз?", img: false }
-        ],
-        "ата": [
-            { q: "Атаңыздын аты-жөнү?", img: false },
-            { q: "Атаңыздын жаш кезиндеги сүрөтү", img: true },
-            { q: "Атаңыздын сизге берген эң чоң кеңеши?", img: false }
-        ],
-        "суйуу": [
-            { q: "Сиздин экинчи жартыңыздын аты ким?", img: false },
-            { q: "Эң алгачкы бирге түшкөн сүрөтүңөр", img: true },
-            { q: "Аны биринчи көргөндө кандай сезим болду?", img: false }
-        ],
-        "дос": [
-            { q: "Досуңуздун аты ким?", img: false },
-            { q: "Бирге түшкөн эң кызыктуу сүрөт", img: true },
-            { q: "Кантип таанышып калгансыздар?", img: false }
-        ]
-    };
-
-    let selectedQuestions = [];
+    let selectedTheme = "";
     let currentStep = 0;
-    let finalReport = "";
-    let collectedImages = [];
+    let answers = [];
+    let coverFiles = [];
 
-    function startQuiz(theme) {
-        selectedQuestions = allQuestions[theme];
-        finalReport = `📕 **ЖАҢЫ КИТЕП ЗАКАЗЫ: ${theme.toUpperCase()}**\n\n`;
-        document.getElementById('theme-section').classList.add('hidden');
-        document.getElementById('quiz-section').classList.remove('hidden');
-        updateQuestion();
-    }
-
-    function updateQuestion() {
-        const quest = selectedQuestions[currentStep];
-        document.getElementById('progressText').innerText = `Суроо: ${currentStep + 1} / ${selectedQuestions.length}`;
-        document.getElementById('questionText').innerText = quest.q;
-        document.getElementById('answerInput').value = "";
-        document.getElementById('imageArea').className = quest.img ? "" : "hidden";
-    }
-
-    function nextQuestion() {
-        const ans = document.getElementById('answerInput').value;
-        const photo = document.getElementById('stepImage').files[0];
-
-        finalReport += `❓ **${selectedQuestions[currentStep].q}**\n✅ ${ans || "Текст жок"}\n\n`;
-        if (photo) collectedImages.push(photo);
-
-        currentStep++;
-        if (currentStep < selectedQuestions.length) {
-            updateQuestion();
-        } else {
-            document.getElementById('quiz-section').classList.add('hidden');
-            document.getElementById('final-section').classList.remove('hidden');
-        }
-    }
-
-    async function sendAllToTelegram() {
-        const btn = document.getElementById('sendBtn');
-        btn.disabled = true;
-        btn.innerText = "Жөнөтүлүүдө...";
-
-        try {
-            await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: CHAT_ID, text: finalReport, parse_mode: 'Markdown' })
-            });
-
-            for (let img of collectedImages) {
-                const fd = new FormData();
-                fd.append('chat_id', CHAT_ID);
-                fd.append('photo', img);
-                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: fd });
-            }
-
-            alert("Рахмат! Баары ийгиликтүү жөнөтүлдү.");
-            location.reload();
-        } catch (e) {
-            alert("Ката кетти!");
-            btn.disabled = false;
-        }
-    }
-</script>
-</body>
-</html>
+    const questionsMap = {
+        "мама": [
+            { q: "Как зовут вашу маму (ФИО)?", img: false },
+            { q: "Загрузите её любимое фото", img: true },
+            { q: "Какое самое яркое воспоминание связано с мамой?", img: false },
+            { q: "Чему самому важному она вас научила?", img: false },
+            { q: "Ваше пожелание маме в
