@@ -153,4 +153,103 @@
             grid.innerHTML += `
                 <div class="cover-option" onclick="selectDesign(this, 'Дизайн ${i}')">
                     <img src="../cover${i}.jpg" onerror="this.src='https://via.placeholder.com/150x210?text=Design+${i}'">
-                    <p style="font
+                    <p style="font-size:12px; margin:5px 0;">Вариант ${i}</p>
+                </div>`;
+        }
+    }
+
+    function checkPassword() {
+        if(document.getElementById('passInput').value === "1234") showSection('design-section');
+        else alert("Ката код!");
+    }
+
+    function selectDesign(el, name) {
+        document.querySelectorAll('.cover-option').forEach(item => item.classList.remove('selected'));
+        el.classList.add('selected');
+        selectedDesignName = name;
+    }
+
+    function startQuestions() {
+        showSection('quiz-section');
+        updateQuestion();
+    }
+
+    function handleNext() {
+        const textBlock = document.getElementById('textInputBlock');
+        const imgBlock = document.getElementById('imageInputBlock');
+        const ansInput = document.getElementById('answerInput');
+
+        if (!imgBlock.classList.contains('hidden')) {
+            answers.push({ q: "ФОТО_БЛОК", a: "Сүрөт жүктөлдү" });
+            imgBlock.classList.add('hidden');
+            textBlock.classList.remove('hidden');
+            currentStep++;
+            checkFinish();
+            return;
+        }
+
+        if (ansInput.value.trim() !== "") {
+            answers.push({ q: questionsData[lang][currentStep], a: ansInput.value });
+        }
+
+        if ((currentStep + 1) % 5 === 0) {
+            textBlock.classList.add('hidden');
+            imgBlock.classList.remove('hidden');
+            document.getElementById('questionText').innerText = (lang === 'ky' ? "Бул бөлүмгө сонун сүрөт кошуңуз" : "Добавьте красивое фото для этого раздела");
+            document.getElementById('nextBtn').innerText = (lang === 'ky' ? "Сүрөттү сактоо 📸" : "Сохранить фото 📸");
+        } else {
+            currentStep++;
+            checkFinish();
+        }
+    }
+
+    function skipQuestion() {
+        answers.push({ q: questionsData[lang][currentStep], a: "--- Өткөрүп жиберди ---" });
+        currentStep++;
+        checkFinish();
+    }
+
+    function checkFinish() {
+        if (currentStep < questionsData[lang].length) updateQuestion();
+        else showSection('final-section');
+    }
+
+    function updateQuestion() {
+        const qList = questionsData[lang];
+        document.getElementById('progressText').innerText = `${currentStep + 1} / ${qList.length}`;
+        document.getElementById('questionText').innerText = qList[currentStep];
+        document.getElementById('answerInput').value = "";
+        document.getElementById('nextBtn').innerText = (lang === 'ky' ? "Кийинки ➡️" : "Далее ➡️");
+    }
+
+    function showSection(id) {
+        ['lang-section', 'password-section', 'design-section', 'author-section', 'quiz-section', 'final-section'].forEach(s => {
+            document.getElementById(s).classList.add('hidden');
+        });
+        document.getElementById(id).classList.remove('hidden');
+    }
+
+    async function sendToTelegram() {
+        const btn = document.getElementById('sendBtn');
+        btn.disabled = true;
+        btn.innerText = "Күтө туруңуз...";
+
+        let text = `💍 ИСТОРИЯ ЛЮБВИ\n🎨 ДИЗАЙН: ${selectedDesignName}\n👤 АВТОР: ${document.getElementById('authorsInput').value}\n\n`;
+        answers.forEach(it => { text += `❓ ${it.q}\n✅ ${it.a}\n\n`; });
+
+        try {
+            await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({chat_id: CHAT_ID, text: text})
+            });
+            alert("Ийгиликтүү жөнөтүлдү! Рахмат.");
+            location.reload();
+        } catch (e) {
+            alert("Ката кетти. Интернетти текшериңиз.");
+            btn.disabled = false;
+        }
+    }
+</script>
+</body>
+</html>
