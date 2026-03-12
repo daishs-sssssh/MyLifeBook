@@ -1,61 +1,78 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ky">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Моя Книга Жизни</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+    <title>Jeke Kitep | Моя Книга</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
     <style>
         :root { --main: #800000; --gold: #d4af37; }
-        body { font-family: 'Lora', serif; background: #4a0000; color: white; margin: 0; padding: 20px; display: flex; justify-content: center; min-height: 100vh; }
-        .container { background: white; color: #333; padding: 30px; border-radius: 20px; width: 100%; max-width: 450px; border: 2px solid var(--gold); text-align: center; }
-        h2 { font-family: 'Playfair Display', serif; color: var(--main); }
-        input, textarea { width: 100%; padding: 12px; margin-top: 10px; border: 1px solid #ccc; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
-        .btn { background: linear-gradient(45deg, var(--main), #b30000); color: white; padding: 15px; border: none; width: 100%; border-radius: 50px; margin-top: 20px; cursor: pointer; font-size: 18px; font-weight: bold; }
+        body { font-family: 'Lora', serif; background: #4a0000; color: white; margin: 0; padding: 15px; display: flex; justify-content: center; min-height: 100vh; }
+        .container { background: white; color: #333; padding: 30px; border-radius: 20px; width: 100%; max-width: 480px; border: 2px solid var(--gold); text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.6); box-sizing: border-box; }
+        h2 { font-family: 'Playfair Display', serif; color: var(--main); line-height: 1.3; font-size: 22px; }
+        .btn { background: linear-gradient(45deg, var(--main), #b30000); color: white; padding: 18px; border: none; width: 100%; border-radius: 50px; margin-top: 25px; cursor: pointer; font-size: 18px; font-weight: bold; }
         .hidden { display: none; }
-        .theme-btn { background: #fdf2f2; border: 1px solid var(--main); padding: 15px; border-radius: 10px; cursor: pointer; color: var(--main); font-weight: bold; margin-top: 10px; width: 100%; display: block; box-sizing: border-box; }
-        #image-previews { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-top: 10px; }
-        .preview-img { width: 100%; height: 50px; object-fit: cover; border-radius: 5px; }
+        .lang-btn { background: #fdf2f2; border: 1px solid var(--main); padding: 15px; border-radius: 12px; cursor: pointer; color: var(--main); font-weight: bold; margin-bottom: 10px; width: 100%; }
+        input, textarea { width: 100%; padding: 14px; margin-top: 15px; border: 1px solid #ddd; border-radius: 12px; font-family: inherit; font-size: 16px; box-sizing: border-box; }
+        .theme-btn { background: #fdf2f2; border: 1px solid var(--main); padding: 18px; border-radius: 12px; cursor: pointer; color: var(--main); font-weight: bold; margin-top: 12px; width: 100%; display: block; box-sizing: border-box; }
+        .cover-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .cover-option { border: 2px solid #eee; border-radius: 15px; padding: 8px; cursor: pointer; position: relative; }
+        .cover-option.selected { border-color: var(--main); background: #fff5f5; }
+        .cover-option img { width: 100%; border-radius: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="password-section">
-        <h2>Вход</h2>
-        <input type="password" id="passInput" placeholder="Введите пароль">
-        <button class="btn" onclick="checkPassword()">Войти</button>
+    <div id="lang-section">
+        <h2>Тилди тандаңыз / Выберите язык</h2>
+        <button class="lang-btn" onclick="setLanguage('ky')">Кыргыз тили 🇰🇬</button>
+        <button class="lang-btn" onclick="setLanguage('ru')">Русский язык 🇷🇺</button>
+    </div>
+
+    <div id="password-section" class="hidden">
+        <h2 id="passTitle">Кирүү</h2>
+        <input type="password" id="passInput" placeholder="">
+        <button class="btn" id="loginBtn" onclick="checkPassword()"></button>
     </div>
 
     <div id="theme-section" class="hidden">
-        <h2>О ком книга?</h2>
-        <div class="theme-btn" onclick="selectTheme('мама')">О маме ❤️</div>
-        <div class="theme-btn" onclick="selectTheme('папа')">О папе 👔</div>
-        <div class="theme-btn" onclick="selectTheme('любовь')">О любви 💍</div>
+        <h2 id="themeTitle"></h2>
+        <div class="theme-btn" id="theme1" onclick="selectTheme('мама')"></div>
+        <div class="theme-btn" id="theme2" onclick="selectTheme('любовь')"></div>
+    </div>
+
+    <div id="design-section" class="hidden">
+        <h2 id="designTitle"></h2>
+        <div class="cover-grid">
+            <div class="cover-option" onclick="selectDesign(this, 'Classic')">
+                <img src="https://via.placeholder.com/150x210/800000/ffffff?text=Design+1">
+                <span>Вариант 1</span>
+            </div>
+            <div class="cover-option" onclick="selectDesign(this, 'Minimal')">
+                <img src="https://via.placeholder.com/150x210/ffffff/800000?text=Design+2">
+                <span>Вариант 2</span>
+            </div>
+        </div>
+        <button class="btn" id="designBtn" onclick="showSection('cover-section')"></button>
     </div>
 
     <div id="cover-section" class="hidden">
-        <h2>Обложка и Авторы</h2>
-        <p style="font-size:14px; color:#666;">Выберите фото для обложки (макс. 10):</p>
-        <input type="file" id="coverImages" accept="image/*" multiple onchange="previewImages()">
-        <div id="image-previews"></div>
-        <textarea id="authorsInput" placeholder="Имена авторов..."></textarea>
-        <button class="btn" onclick="startQuestions()">К вопросам ➡️</button>
+        <h2 id="authorTitle"></h2>
+        <textarea id="authorsInput" placeholder=""></textarea>
+        <button class="btn" id="authorBtn" onclick="startQuestions()"></button>
     </div>
 
     <div id="quiz-section" class="hidden">
-        <div style="color:var(--gold); font-weight:bold;" id="progressText">Вопрос 1</div>
-        <h2 id="questionText">...</h2>
-        <textarea id="answerInput" placeholder="Ваш ответ..."></textarea>
-        <div id="qImageArea" class="hidden">
-            <input type="file" id="qImage" accept="image/*">
-        </div>
-        <button class="btn" onclick="nextQuestion()">Далее ➡️</button>
+        <div id="progressText" style="color:var(--gold); font-style:italic;"></div>
+        <h2 id="questionText"></h2>
+        <textarea id="answerInput" rows="5"></textarea>
+        <button class="btn" id="nextBtn" onclick="nextQuestion()"></button>
     </div>
 
     <div id="final-section" class="hidden">
-        <h2>Готово! 🎉</h2>
-        <button class="btn" id="sendBtn" onclick="sendToTelegram()">Отправить данные 🚀</button>
+        <h2 id="finalTitle"></h2>
+        <button class="btn" id="sendBtn" onclick="sendToTelegram()"></button>
     </div>
 </div>
 
@@ -63,48 +80,77 @@
     const BOT_TOKEN = "8604545122:AAEx9ZLtB8Cwl1Juj7ue15ktZoB1UtrpBDQ";
     const CHAT_ID = "5420064941";
 
+    let lang = 'ky';
     let selectedTheme = "";
+    let selectedDesignName = "";
     let currentStep = 0;
     let answers = [];
-    let coverFiles = [];
 
-    const questionsMap = {
-        "мама": [
-            {q: "ФИО мамы?", img: false},
-            {q: "Фото мамы", img: true},
-            {q: "Самое теплое воспоминание?", img: false}
-        ],
-        "папа": [
-            {q: "ФИО папы?", img: false},
-            {q: "Важное фото", img: true}
-        ],
-        "любовь": [
-            {q: "Как вы познакомились?", img: false},
-            {q: "Ваше фото", img: true}
-        ]
+    const texts = {
+        ky: {
+            passPlaceholder: "Купуя кодду жазыңыз", loginBtn: "Кирүү",
+            themeTitle: "Китеп кимге арналат?", theme1: "Апама ❤️", theme2: "Түгөйүмө 💍",
+            designTitle: "Дизайнды тандаңыз", designBtn: "Тандадым ➡️",
+            authorTitle: "Китептин авторлору", authorPlaceholder: "Бул китепти кимдер белекке берип жатат?", authorBtn: "Суроолорго өтүү ➡️",
+            nextBtn: "Кийинки ➡️", finalTitle: "Баары даяр! Жөнөтүү баскычын басыңыз.", sendBtn: "Жөнөтүү 🚀",
+            questions: {
+                мама: [
+                    "Апаңызды балалыктагы кайсы жыт же үн менен сүрөттөйт элеңиз?",
+                    "Апаңыз өзүнүн мисалы менен сизге үйрөткөн эң маанилүү сабак кайсы?",
+                    "Апаңыз менен сыймыктанган эң эсте каларлык учуруңуз?",
+                    "Апаңыздын кайсы үч сапатын балдарыңызга каалаар элеңиз?"
+                ]
+            }
+        },
+        ru: {
+            passPlaceholder: "Введите секретный код", loginBtn: "Войти",
+            themeTitle: "Кому посвящена книга?", theme1: "Маме ❤️", theme2: "Любимому человеку 💍",
+            designTitle: "Выберите дизайн", designBtn: "Выбрать ➡️",
+            authorTitle: "Авторы книги", authorPlaceholder: "Кто дарит эту книгу?", authorBtn: "К вопросам ➡️",
+            nextBtn: "Далее ➡️", finalTitle: "Всё готово! Нажмите отправить.", sendBtn: "Отправить 🚀",
+            questions: {
+                мама: [
+                    "С каким запахом или звуком из детства у вас ассоциируется мама?",
+                    "Какой самый важный урок она преподала вам своим примером?",
+                    "Вспомните момент, когда вы особенно сильно гордились мамой?",
+                    "Какие три качества мамы вы бы хотели передать своим детям?"
+                ]
+            }
+        }
     };
 
+    function setLanguage(l) {
+        lang = l;
+        document.getElementById('passInput').placeholder = texts[lang].passPlaceholder;
+        document.getElementById('loginBtn').innerText = texts[lang].loginBtn;
+        document.getElementById('themeTitle').innerText = texts[lang].themeTitle;
+        document.getElementById('theme1').innerText = texts[lang].theme1;
+        document.getElementById('theme2').innerText = texts[lang].theme2;
+        document.getElementById('designTitle').innerText = texts[lang].designTitle;
+        document.getElementById('designBtn').innerText = texts[lang].designBtn;
+        document.getElementById('authorTitle').innerText = texts[lang].authorTitle;
+        document.getElementById('authorsInput').placeholder = texts[lang].authorPlaceholder;
+        document.getElementById('authorBtn').innerText = texts[lang].authorBtn;
+        document.getElementById('nextBtn').innerText = texts[lang].nextBtn;
+        document.getElementById('finalTitle').innerText = texts[lang].finalTitle;
+        document.getElementById('sendBtn').innerText = texts[lang].sendBtn;
+        showSection('password-section');
+    }
+
     function checkPassword() {
-        if(document.getElementById('passInput').value === "1234") {
-            showSection('theme-section');
-        } else alert("Пароль: 1234");
+        if(document.getElementById('passInput').value === "1234") showSection('theme-section');
+        else alert(lang === 'ky' ? "Ката код!" : "Неверный код!");
     }
 
     function selectTheme(theme) {
         selectedTheme = theme;
-        showSection('cover-section');
+        showSection('design-section');
     }
 
-    function previewImages() {
-        const preview = document.getElementById('image-previews');
-        preview.innerHTML = "";
-        coverFiles = Array.from(document.getElementById('coverImages').files).slice(0, 10);
-        coverFiles.forEach(file => {
-            const img = document.createElement('img');
-            img.src = URL.createObjectURL(file);
-            img.className = 'preview-img';
-            preview.appendChild(img);
-        });
+    function selectDesign(element, name) {
+        document.querySelectorAll('.cover-option').forEach(el => el.classList.remove('selected'));
+        element.classList.add('selected');
+        selectedDesignName = name;
     }
 
     function startQuestions() {
@@ -113,28 +159,22 @@
     }
 
     function updateQuestion() {
-        const qList = questionsMap[selectedTheme];
-        const q = qList[currentStep];
-        document.getElementById('progressText').innerText = `Вопрос ${currentStep + 1} из ${qList.length}`;
-        document.getElementById('questionText').innerText = q.q;
-        document.getElementById('qImageArea').className = q.img ? "" : "hidden";
+        const qList = texts[lang].questions[selectedTheme] || texts[lang].questions['мама'];
+        document.getElementById('progressText').innerText = (lang === 'ky' ? "Суроо " : "Вопрос ") + (currentStep + 1);
+        document.getElementById('questionText').innerText = qList[currentStep];
         document.getElementById('answerInput').value = "";
     }
 
     function nextQuestion() {
-        const qList = questionsMap[selectedTheme];
-        answers.push({
-            q: qList[currentStep].q,
-            a: document.getElementById('answerInput').value,
-            img: document.getElementById('qImage').files[0]
-        });
+        const qList = texts[lang].questions[selectedTheme] || texts[lang].questions['мама'];
+        answers.push({q: qList[currentStep], a: document.getElementById('answerInput').value});
         currentStep++;
         if(currentStep < qList.length) updateQuestion();
         else showSection('final-section');
     }
 
     function showSection(id) {
-        ['password-section', 'theme-section', 'cover-section', 'quiz-section', 'final-section'].forEach(s => {
+        ['lang-section', 'password-section', 'theme-section', 'design-section', 'cover-section', 'quiz-section', 'final-section'].forEach(s => {
             document.getElementById(s).classList.add('hidden');
         });
         document.getElementById(id).classList.remove('hidden');
@@ -142,24 +182,17 @@
 
     async function sendToTelegram() {
         const btn = document.getElementById('sendBtn');
-        btn.disabled = true; btn.innerText = "Отправка...";
-        let text = `📕 ЗАКАЗ: ${selectedTheme.toUpperCase()}\n👤 Авторы: ${document.getElementById('authorsInput').value}\n\n`;
+        btn.disabled = true;
+        let text = `🌍 LANG: ${lang.toUpperCase()}\n📕 ТЕМА: ${selectedTheme}\n🎨 ДИЗАЙН: ${selectedDesignName}\n👤 АВТОРЫ: ${document.getElementById('authorsInput').value}\n\n`;
         answers.forEach(it => { text += `❓ ${it.q}\n✅ ${it.a}\n\n`; });
 
-        try {
-            await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({chat_id: CHAT_ID, text: text})
-            });
-            for(let f of coverFiles) {
-                const fd = new FormData();
-                fd.append('chat_id', CHAT_ID); fd.append('photo', f);
-                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {method: 'POST', body: fd});
-            }
-            alert("Успешно отправлено!");
-            location.reload();
-        } catch(e) { alert("Ошибка!"); btn.disabled = false; }
+        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({chat_id: CHAT_ID, text: text})
+        });
+        alert(lang === 'ky' ? "Жөнөтүлдү!" : "Отправлено!");
+        location.reload();
     }
 </script>
 </body>
