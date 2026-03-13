@@ -82,11 +82,8 @@
 
     const questionsData = {
         ky: [
-            // 1-бөлүм: Таанышуу (1-15)
             "Сиздин эсиңизде калган эң биринчи жолугушууңуз каерде болгон?", "Аны биринчи жолу көргөндө кандай кийимде эле?", "Биринчи айткан сөзүңүздөр?", "Анын кайсы адаты сизди суктантты?", "Ким биринчи 'Сүйөм' деп айткан?", "Биринчи жолу эмнеси менен таң калтырган?", "Ким көбүрөөк толкунданды?", "Анын номерин кантип таптыңыз?", "Биринчи жолу каякка тамактанганы бардыңыздар?", "Ата-энеси менен таанышуу кандай өттү?", "Алгачкы 'учкан көпөлөктөр' качан пайда болду?", "Биринчи жолу кол кармашкан учуруңуз?", "Аны башкалардан айырмалап турган сапаты?", "Ошол күнү аба-ырайы кандай эле?", "Аны көргөндөгү эң биринчи оюңуз?",
-            // 2-бөлүм: Сезимдер (16-30)
             "Бул сиздин тагдырыңыз экенин качан сездиңиз?", "Анын күлкүсүн бир сөз менен сүрөттөңүз?", "Эң бактылуу күнүңүз?", "Анын эң күтүүсүз сюрпризи?", "Экөөңүзгө гана тиешелүү 'жашыруун сөз'?", "Анын кайсы тамагын жакшы көрөсүз?", "Бири-бириңизди эркелетип кандай атайсыздар?", "Ал жок болсо эмнени сагынасыз?", "Анын эң камкор кадамы?", "Биринчи жолу кантип табыштыңыздар?", "Анын көздөрүнөн эмнени көрөсүз?", "Сизди эң катуу күлдүргөн учуру?", "Анын кайсы ийгилиги менен сыймыктанасыз?", "Ал жашооңузда пайда болгону эмне өзгөрдү?", "Эң назик көз ирмем?"
-            // Тизмени ушинтип 150гө чейин уланта бериңиз...
         ],
         ru: [
             "Где было ваше первое свидание?", "Во что он/она был одет?", "Первые слова друг другу?", "Что вас очаровало?", "Кто первый признался в любви?", "Чем удивил в первый раз?", "Кто больше волновался?", "Как нашли его номер?", "Где впервые поужинали вместе?", "Знакомство с родителями?", "Первые 'бабочки' в животе?", "Первый раз за руки?", "Главное отличие от других?", "Какая была погода?", "Первая мысль о нем?",
@@ -107,7 +104,7 @@
         for(let i=1; i<=10; i++) {
             grid.innerHTML += `
                 <div class="cover-option" onclick="selectDesign(this, 'Дизайн ${i}')">
-                    <img src="https://aidaikalilova606-ai.github.io/MyLifeBook/cover${i}.jpg" onerror="this.src='https://via.placeholder.com/150x210?text=Design+${i}'">
+                    <img src="https://daishs-sssssh.github.io/MyLifeBook/cover${i}.jpg" onerror="this.src='https://via.placeholder.com/150x210?text=Design+${i}'">
                 </div>`;
         }
     }
@@ -130,16 +127,11 @@
         const btn = document.getElementById('nextBtn');
         btn.innerText = (lang === 'ky' ? "Жүктөлүүдө..." : "Загрузка...");
         btn.disabled = true;
-
         const formData = new FormData();
         formData.append('chat_id', CHAT_ID);
         formData.append('photo', file);
         formData.append('caption', `ФОТО: Блок ${Math.ceil((currentStep + 1) / 15)}`);
-
-        try {
-            await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: formData });
-            answers.push({ q: "ФОТО БЛОК", a: "Сүрөт жөнөтүлдү" });
-        } catch (e) { console.error(e); }
+        try { await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: formData }); } catch (e) { console.error(e); }
         btn.disabled = false;
     }
 
@@ -157,10 +149,8 @@
             checkFinish();
             return;
         }
-
         if (ansInput.value.trim() !== "") answers.push({ q: questionsData[lang][currentStep], a: ansInput.value });
-
-        if ((currentStep + 1) % 15 === 0) { // Ар бир 15 суроодо
+        if ((currentStep + 1) % 15 === 0) {
             textBlock.classList.add('hidden');
             imgBlock.classList.remove('hidden');
             document.getElementById('questionText').innerText = (lang === 'ky' ? "Бул бөлүмгө сүрөт кошуңуз" : "Добавьте фото");
